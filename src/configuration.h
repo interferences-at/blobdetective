@@ -1,3 +1,6 @@
+#ifndef __CONFIGURATION_H__
+#define __CONFIGURATION_H__
+
 namespace blobspy {
 
 struct Configuration
@@ -8,3 +11,5 @@ struct Configuration
 };
 
 } // end of namespace
+
+#endif // __CONFIGURATION_H__
