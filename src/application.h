@@ -3,8 +3,8 @@
 
 #include "configuration.h"
 #include "oscinterface.h"
-#include <vector>
 #include <opencv2/opencv.hpp>
+#include <vector>
 
 namespace blobspy {
 
