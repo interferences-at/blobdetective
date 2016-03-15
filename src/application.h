@@ -2,7 +2,9 @@
 #define __APPLICATION_H__
 
 #include "configuration.h"
+#include <opencv2/opencv.hpp>
 #include "oscinterface.h"
+#include <vector>
 
 namespace blobspy {
 
