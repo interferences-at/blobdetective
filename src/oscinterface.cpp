@@ -20,4 +20,9 @@ void OscInterface::send_blob_position(float x, float y, float size)
     sender_.sendMessage("/blob", "sfff", this->peer_id.c_str(), x, y, size, LO_ARGS_END);
 }
 
+OscInterface::~OscInterface()
+{
+
+}
+
 } // end of namespace

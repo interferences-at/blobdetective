@@ -49,7 +49,15 @@ int Application::run()
     }
 
     cv::Mat edges;
-    cv::SimpleBlobDetector detector;
+
+    cv::SimpleBlobDetector::Params params;
+    params.minDistBetweenBlobs = 10.0;
+    params.filterByArea = true;
+    params.minArea = 20.0;
+    params.maxArea = 500.0; 
+    params.minThreshold = 40.0; 
+
+    cv::SimpleBlobDetector detector(params);
     cv::namedWindow("Blobspy", 1);
     std::cout << "Press any key to quit" << std::endl;
 
@@ -89,6 +97,11 @@ int Application::run()
     std::cout << "Done" << std::endl;
     // the camera will be deinitialized automatically in VideoCapture destructor
     return 0;
+}
+
+Application::~Application()
+{
+    delete this->osc_interface;
 }
 
 } // end of namespace

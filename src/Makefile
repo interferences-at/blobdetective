@@ -1,4 +1,4 @@
-CFLAGS=-W -Wall -g `pkg-config --cflags opencv liblo`
+CFLAGS=-W -Wall -g -fno-stack-protector `pkg-config --cflags opencv liblo`
 LDFLAGS=`pkg-config --libs opencv liblo`
 CC=g++
 SRC=$(wildcard *.cpp)
