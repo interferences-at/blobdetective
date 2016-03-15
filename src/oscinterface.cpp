@@ -15,9 +15,9 @@ OscInterface::OscInterface(
     std::cout << "Sending to osc_udp://" << send_addr << ":" << send_port << std::endl;
 }
 
-void OscInterface::send_blob_position(int x, int y, int diameter)
+void OscInterface::send_blob_position(float x, float y, float size)
 {
-    sender_.sendMessage("/blob", "siii", this->peer_id.c_str(), x, y, diameter, LO_ARGS_END);
+    sender_.sendMessage("/blob", "sfff", this->peer_id.c_str(), x, y, size, LO_ARGS_END);
 }
 
 } // end of namespace

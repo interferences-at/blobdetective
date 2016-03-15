@@ -39,7 +39,7 @@ class OscInterface
         /**
          * Sends blob position.
          */
-        void send_blob_position(int x, int y, int diameter);
+        void send_blob_position(float x, float y, float size);
     private:
         std::string peer_id;
         OscSender sender_;

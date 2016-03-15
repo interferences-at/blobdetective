@@ -10,7 +10,7 @@ class Application
 {
     private:
         Configuration _configuration;
-        // OscInterface osc_interface;
+        OscInterface *osc_interface;
     public:
         Application(Configuration& configuration);
         int run();

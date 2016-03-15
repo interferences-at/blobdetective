@@ -25,17 +25,19 @@ void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoin
         }
         float x = keypoints[biggest_index].pt.x;
         float y = keypoints[biggest_index].pt.y;
-        std::cout << "TODO Send /blob " << x << ", " << y << std::endl;
+        float size = keypoints[biggest_index].size;
+        std::cout << "TODO Send /blob " << x << ", " << y << " " << size << std::endl;
+        this->osc_interface->send_blob_position(x, y, size);
     }
 }
 
 Application::Application(Configuration& configuration)
 {
     this->_configuration = configuration;
-    // this->osc_interface = OscInterface(
-    //         std::string("default"), // FIXME
-    //         std::string("13333"), // FIXME
-    //         std::string("127.0.0.1")); // FIXME
+    this->osc_interface = new OscInterface(
+            std::string("default"), // FIXME
+            std::string("13333"), // FIXME
+            std::string("127.0.0.1")); // FIXME
 }
 
 int Application::run()
