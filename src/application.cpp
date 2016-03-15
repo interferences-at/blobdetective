@@ -4,6 +4,31 @@
 
 namespace blobspy {
 
+void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints)
+{
+    if (keypoints.size() == 0)
+    {
+        return;
+    }
+    else
+    {
+        unsigned int biggest_index = 0;
+        float biggest_size = 0.0f;
+        for (unsigned int i = 0; i < keypoints.size(); i++)
+        {
+            float size = keypoints[i].size;
+            if (size > biggest_size)
+            {
+                biggest_size = size;
+                biggest_index = i;
+            }
+        }
+        float x = keypoints[biggest_index].pt.x;
+        float y = keypoints[biggest_index].pt.y;
+        std::cout << "TODO Send /blob " << x << ", " << y << std::endl;
+    }
+}
+
 Application::Application(Configuration& configuration)
 {
     this->_configuration = configuration;
@@ -44,6 +69,10 @@ int Application::run()
         cv::drawKeypoints(edges, keypoints, im_with_keypoints,
                 cv::Scalar(0, 0, 255),
                 cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+        send_blob_coordinates(keypoints);
+
+
         // Show blobs
         cv::imshow("Blobspy", im_with_keypoints);
 

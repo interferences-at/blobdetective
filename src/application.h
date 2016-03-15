@@ -14,6 +14,8 @@ class Application
     public:
         Application(Configuration& configuration);
         int run();
+    private:
+        void send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints);
 };
 
 } // end of namespace
