@@ -4,11 +4,6 @@
 
 namespace blobspy {
 
-Configuration::Configuration()
-{
-    this->video_device_id = 0;
-}
-
 Application::Application(Configuration& configuration)
 {
     this->_configuration = configuration;

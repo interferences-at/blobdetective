@@ -1,11 +1,6 @@
-namespace blobspy {
+#include "configuration.h"
 
-struct Configuration
-{
-    public:
-        Configuration();
-        int video_device_id;
-};
+namespace blobspy {
 
 class Application
 {
