@@ -1,0 +1,8 @@
+Installation instructions for Blobspy
+=====================================
+
+Ubuntu 15.10
+------------
+sudo apt-get install build-essential libopencv-dev liblo-dev
+cd ./src/
+make
