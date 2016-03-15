@@ -26,7 +26,7 @@ void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoin
         float x = keypoints[biggest_index].pt.x;
         float y = keypoints[biggest_index].pt.y;
         float size = keypoints[biggest_index].size;
-        std::cout << "TODO Send /blob " << x << ", " << y << " " << size << std::endl;
+        // std::cout << "TODO Send /blob " << x << ", " << y << " " << size << std::endl;
         this->osc_interface->send_blob_position(x, y, size);
     }
 }
@@ -54,7 +54,7 @@ int Application::run()
     params.minDistBetweenBlobs = 10.0;
     params.filterByArea = true;
     params.minArea = 20.0;
-    params.maxArea = 500.0; 
+    //params.maxArea = 500.0; 
     params.minThreshold = 40.0; 
 
     cv::SimpleBlobDetector detector(params);
@@ -67,16 +67,23 @@ int Application::run()
         cap >> frame; // get a new frame from camera
         cv::cvtColor(frame, edges, CV_BGR2GRAY);
         cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
+        cv::Mat inv_src = cv::Scalar::all(255) - edges;
+        // cv::cvAdaptiveThreshold(inv_src, inv_src, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 13, 1);
+        // int threshold_value = 0;
+        // int const max_BINARY_value = 255;
+        // //int threshold_type = 0; // 1: Binary
+        // int threshold_type = 1; // 1: Binary Inverted
+        //cv::threshold(inv_src, inv_src, threshold_value, max_BINARY_value,threshold_type );
 
         // Detect blobs.
         std::vector<cv::KeyPoint> keypoints;
-        detector.detect(edges, keypoints);
+        detector.detect(inv_src, keypoints);
  
         // Draw detected blobs as red circles.
         // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the
         // circle corresponds to the size of blob
         cv::Mat im_with_keypoints;
-        cv::drawKeypoints(edges, keypoints, im_with_keypoints,
+        cv::drawKeypoints(frame, keypoints, im_with_keypoints,
                 cv::Scalar(0, 0, 255),
                 cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
