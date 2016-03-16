@@ -36,8 +36,9 @@ Application::Application(Configuration& configuration)
     this->_configuration = configuration;
     this->osc_interface = new OscInterface(
             std::string("default"), // FIXME
-            std::string("13333"), // FIXME
-            std::string("127.0.0.1")); // FIXME
+            std::string("31340"), // FIXME
+            // std::string("127.0.0.1")); // FIXME
+            std::string("192.168.1.6")); // FIXME
 }
 
 int Application::run()
@@ -50,12 +51,60 @@ int Application::run()
 
     cv::Mat edges;
 
+    // Default values of parameters are tuned to extract dark circular blobs.
     cv::SimpleBlobDetector::Params params;
+
+    // DEFAULT VALUES:
+    //   thresholdStep = 10;
+    //   minThreshold = 50;
+    //   maxThreshold = 220;
+    //   maxCentersDist = 10;
+    //   defaultKeypointSize = 1;
+    //   minRepeatability = 2;
+    //   computeRadius = true;
+    //   filterByColor = true;
+    //   blobColor = 0;
+    //   isGrayscaleCentroid = false;
+    //   centroidROIMargin = 2;
+    //
+    //   filterByArea = true;
+    //   minArea = 25;
+    //   maxArea = 5000;
+    //
+    //   filterByInertia = true;
+    //   minInertiaRatio = 0.1f;
+    //
+    //   filterByConvexity = true;
+    //   minConvexity = 0.95f;
+    //
+    //   filterByCircularity = false;
+    //   minCircularity = 0.8f;
+
+
+
+
+    // Convert the source image to binary images by applying thresholding with
+    // several thresholds from minThreshold (inclusive) to maxThreshold
+    // (exclusive) with distance thresholdStep between neighboring thresholds
+    // Thresholding : Convert the source images to several binary images by thresholding the source image with thresholds starting at minThreshold. These thresholds are incremented  by thresholdStep until maxThreshold. So the first threshold is minThreshold, the second is minThreshold + thresholdStep, the third is minThreshold + 2 x thresholdStep, and so on.
+    // These are color thresholds:
+    params.minThreshold = 50.0; 
+    params.maxThreshold = 220.0;
+
+    // Group centers from several binary images by their coordinates.
+    // Close centers form one group that corresponds to one blob, which is
+    // controlled by the minDistBetweenBlobs parameter.
     params.minDistBetweenBlobs = 10.0;
+
+    // Extracted blobs have an area between minArea (inclusive) and
+    // maxArea (exclusive).
     params.filterByArea = true;
-    params.minArea = 20.0;
-    //params.maxArea = 500.0; 
-    params.minThreshold = 40.0; 
+    params.minArea = 25;
+    params.maxArea = 5000; 
+
+    // Filter by Circularity
+    // params.filterByCircularity = true;
+    // params.minCircularity = 0.1;
 
     cv::SimpleBlobDetector detector(params);
     cv::namedWindow("Blobspy", 1);
@@ -65,15 +114,22 @@ int Application::run()
     {
         cv::Mat frame;
         cap >> frame; // get a new frame from camera
+        // Convert it to grayscale
         cv::cvtColor(frame, edges, CV_BGR2GRAY);
+
+        // Blur
         cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
+
+        // Invert colors
         cv::Mat inv_src = cv::Scalar::all(255) - edges;
+
+        // No need to do a threshold manually, since the SimpleBlobDetector does it
         // cv::cvAdaptiveThreshold(inv_src, inv_src, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 13, 1);
         // int threshold_value = 0;
         // int const max_BINARY_value = 255;
         // //int threshold_type = 0; // 1: Binary
         // int threshold_type = 1; // 1: Binary Inverted
-        //cv::threshold(inv_src, inv_src, threshold_value, max_BINARY_value,threshold_type );
+        // cv::threshold(inv_src, inv_src, threshold_value, max_BINARY_value,threshold_type );
 
         // Detect blobs.
         std::vector<cv::KeyPoint> keypoints;
@@ -87,14 +143,12 @@ int Application::run()
                 cv::Scalar(0, 0, 255),
                 cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
+        // Send OSC
         send_blob_coordinates(keypoints);
-
 
         // Show blobs
         cv::imshow("Blobspy", im_with_keypoints);
 
-        // cv::Canny(edges, edges, 0, 30, 3);
-        // cv::imshow("Blobspy", edges);
         if (cv::waitKey(30) >= 0)
         {
             break;
