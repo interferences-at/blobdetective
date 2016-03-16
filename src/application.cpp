@@ -99,8 +99,8 @@ int Application::run()
     // Extracted blobs have an area between minArea (inclusive) and
     // maxArea (exclusive).
     params.filterByArea = true;
-    params.minArea = 5000;
-    params.maxArea = 50000; 
+    params.minArea = 1500;
+    params.maxArea = 10000;
 
     // Filter by Circularity
     params.filterByCircularity = false;
@@ -110,6 +110,7 @@ int Application::run()
 
     cv::SimpleBlobDetector detector(params);
     cv::namedWindow("Blobspy", 1);
+    cv::Mat mirrored_img;
     std::cout << "Press any key to quit" << std::endl;
 
     while (true)
@@ -118,12 +119,13 @@ int Application::run()
         cap >> frame; // get a new frame from camera
         // Convert it to grayscale
         cv::cvtColor(frame, edges, CV_BGR2GRAY);
+        cv::flip(edges, mirrored_img, 1);
 
         // Blur
         // cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
 
         // Invert colors
-        cv::Mat inv_src = cv::Scalar::all(255) - edges;
+        cv::Mat inv_src = cv::Scalar::all(255) - mirrored_img;
 
         // No need to do a threshold manually, since the SimpleBlobDetector does it
         // cv::cvAdaptiveThreshold(inv_src, inv_src, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 13, 1);
