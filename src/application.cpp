@@ -88,8 +88,8 @@ int Application::run()
     // (exclusive) with distance thresholdStep between neighboring thresholds
     // Thresholding : Convert the source images to several binary images by thresholding the source image with thresholds starting at minThreshold. These thresholds are incremented  by thresholdStep until maxThreshold. So the first threshold is minThreshold, the second is minThreshold + thresholdStep, the third is minThreshold + 2 x thresholdStep, and so on.
     // These are color thresholds:
-    params.minThreshold = 50.0; 
-    params.maxThreshold = 220.0;
+    params.minThreshold = 0.0; 
+    params.maxThreshold = 50.0;
 
     // Group centers from several binary images by their coordinates.
     // Close centers form one group that corresponds to one blob, which is
@@ -99,12 +99,14 @@ int Application::run()
     // Extracted blobs have an area between minArea (inclusive) and
     // maxArea (exclusive).
     params.filterByArea = true;
-    params.minArea = 25;
-    params.maxArea = 5000; 
+    params.minArea = 5000;
+    params.maxArea = 50000; 
 
     // Filter by Circularity
-    // params.filterByCircularity = true;
-    // params.minCircularity = 0.1;
+    params.filterByCircularity = false;
+    // params.minCircularity = 0.2;
+
+    params.filterByConvexity = false;
 
     cv::SimpleBlobDetector detector(params);
     cv::namedWindow("Blobspy", 1);
@@ -118,7 +120,7 @@ int Application::run()
         cv::cvtColor(frame, edges, CV_BGR2GRAY);
 
         // Blur
-        cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
+        // cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
 
         // Invert colors
         cv::Mat inv_src = cv::Scalar::all(255) - edges;
@@ -139,7 +141,8 @@ int Application::run()
         // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the
         // circle corresponds to the size of blob
         cv::Mat im_with_keypoints;
-        cv::drawKeypoints(frame, keypoints, im_with_keypoints,
+        //cv::drawKeypoints(frame, keypoints, im_with_keypoints,
+        cv::drawKeypoints(inv_src, keypoints, im_with_keypoints,
                 cv::Scalar(0, 0, 255),
                 cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
