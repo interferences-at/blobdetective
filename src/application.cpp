@@ -2,7 +2,7 @@
 #include <iostream>
 #include "application.h"
 
-namespace blobspy {
+namespace blobdetective {
 
 void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints)
 {

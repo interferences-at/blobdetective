@@ -28,4 +28,4 @@ install-sh
 libtool
 ltmain.sh
 nohup.out
-src/blobspy
+src/blobdetective

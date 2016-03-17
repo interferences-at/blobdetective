@@ -1,5 +1,5 @@
-Installation instructions for Blobspy
-=====================================
+Installation instructions for Blobdetective
+===========================================
 
 Ubuntu 15.10
 ------------

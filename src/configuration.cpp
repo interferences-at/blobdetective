@@ -1,6 +1,6 @@
 #include "configuration.h"
 
-namespace blobspy {
+namespace blobdetective {
 
 Configuration::Configuration()
 {

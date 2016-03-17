@@ -2,7 +2,7 @@
 #include <lo/lo.h>
 #include "oscinterface.h"
 
-namespace blobspy {
+namespace blobdetective {
 
 OscInterface::OscInterface(
         const std::string &peer_identifier,

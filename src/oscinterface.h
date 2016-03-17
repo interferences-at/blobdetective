@@ -24,7 +24,7 @@
 #include <string>
 #include "oscsender.h"
 
-namespace blobspy {
+namespace blobdetective {
 
 /** Open Sound Control sending and receiving for this app.
  */

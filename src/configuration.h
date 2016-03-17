@@ -1,7 +1,7 @@
 #ifndef __CONFIGURATION_H__
 #define __CONFIGURATION_H__
 
-namespace blobspy {
+namespace blobdetective {
 
 struct Configuration
 {

@@ -1,6 +1,6 @@
-Blobspy
+Blobdetective
 =======
-Blobspy is a blob tracker that sends OSC messages.
+Blobdetective is a blob tracker that sends OSC messages.
 
 Author: Alexandre Quessy <alexandre@quessy.net>
 Date: 2016

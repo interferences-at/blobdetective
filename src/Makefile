@@ -4,13 +4,13 @@ CC=g++
 SRC=$(wildcard *.cpp)
 OBJS=$(SRC:.cpp=.o)
 
-all: blobspy
+all: blobdetective
 
-blobspy: $(OBJS)
+blobdetective: $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 %.o : %.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
-	@rm -f *.o blobspy
+	@rm -f *.o blobdetective
