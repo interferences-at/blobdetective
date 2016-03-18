@@ -2,6 +2,9 @@
 #define __OPTION_H__
 
 #include <string>
+#include <iostream>
+#include <sstream>
+#include <ostream>
 
 namespace blobdetective {
 
@@ -47,6 +50,8 @@ class Option
         std::string _string;
         bool _boolean;
 };
+
+std::ostream &operator<<(std::ostream &os, const Option &option);
 
 } // end of namespace
 

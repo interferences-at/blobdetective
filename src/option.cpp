@@ -78,4 +78,27 @@ bool Option::is_boolean() const
     return this->_type == BOOLEAN;
 }
 
+std::ostream &operator<<(std::ostream &os, const Option &option)
+{
+    os << "" << option.get_name() << " = ";
+    if (option.is_int())
+    {
+        os << option.get_int();
+    }
+    else if (option.is_boolean())
+    {
+        os << option.get_boolean();
+    }
+    else if (option.is_float())
+    {
+        os << option.get_float();
+    }
+    else if (option.is_string())
+    {
+        os << option.get_string();
+    }
+    os << "";
+    return os;
+}
+
 } // end of namespace
