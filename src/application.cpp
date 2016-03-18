@@ -4,6 +4,13 @@
 
 namespace blobdetective {
 
+static std::string int_to_string(int value)
+{
+    std::stringstream ss;
+    ss << value;
+    return ss.str();
+}
+
 void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints)
 {
     if (keypoints.size() == 0)
@@ -33,12 +40,14 @@ void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoin
 
 Application::Application(Configuration& configuration)
 {
+    // First setup the configuration
     this->_configuration = configuration;
+
+    // Setup OSC sender
     this->osc_interface = new OscInterface(
-            std::string("default"), // FIXME
-            std::string("31340"), // FIXME
-            // std::string("127.0.0.1")); // FIXME
-            std::string("192.168.1.6")); // FIXME
+            this->get_string_option("identifier"),
+            int_to_string(this->get_int_option("osc_send_port")).c_str(),
+            this->get_string_option("osc_send_host"));
 }
 
 
@@ -89,33 +98,42 @@ int Application::run()
     //   filterByCircularity = false;
     //   minCircularity = 0.8f;
 
-
-
-
     // Convert the source image to binary images by applying thresholding with
     // several thresholds from minThreshold (inclusive) to maxThreshold
     // (exclusive) with distance thresholdStep between neighboring thresholds
     // Thresholding : Convert the source images to several binary images by thresholding the source image with thresholds starting at minThreshold. These thresholds are incremented  by thresholdStep until maxThreshold. So the first threshold is minThreshold, the second is minThreshold + thresholdStep, the third is minThreshold + 2 x thresholdStep, and so on.
     // These are color thresholds:
-    params.minThreshold = 0.0; 
-    params.maxThreshold = 50.0;
+    params.thresholdStep = this->get_int_option("thresholdStep");
+    params.minThreshold = this->get_float_option("minThreshold");
+    params.maxThreshold = this->get_float_option("maxThreshold");
+
+    //params.maxCentersDist = this->get_int_option("maxCentersDist");
 
     // Group centers from several binary images by their coordinates.
     // Close centers form one group that corresponds to one blob, which is
     // controlled by the minDistBetweenBlobs parameter.
-    params.minDistBetweenBlobs = 10.0;
+    params.minDistBetweenBlobs = this->get_float_option("minDistBetweenBlobs");
 
     // Extracted blobs have an area between minArea (inclusive) and
     // maxArea (exclusive).
-    params.filterByArea = true;
-    params.minArea = 1500;
-    params.maxArea = 10000;
+    params.filterByArea = this->get_boolean_option("filterByArea");
+    params.minArea = this->get_int_option("minArea");
+    params.maxArea = this->get_int_option("maxArea");
 
-    // Filter by Circularity
-    params.filterByCircularity = false;
-    // params.minCircularity = 0.2;
-
-    params.filterByConvexity = false;
+    params.filterByCircularity = this->get_boolean_option("filterByCircularity");
+    params.minCircularity = this->get_boolean_option("minCircularity");
+    params.filterByConvexity = this->get_boolean_option("filterByConvexity");
+    // params.defaultKeypointSize = this->get_int_option("defaultKeypointSize");
+    params.minRepeatability = this->get_int_option("minRepeatability");
+    // params.computeRadius = this->get_boolean_option("computeRadius");
+    params.filterByColor = this->get_boolean_option("filterByColor");
+    params.blobColor = this->get_int_option("blobColor");
+    //params.isGrayscaleCentroid = this->get_boolean_option("isGrayscaleCentroid");
+    //params.centroidROIMargin = this->get_int_option("centroidROIMargin");
+    params.filterByInertia = this->get_boolean_option("filterByInertia");
+    params.minInertiaRatio = this->get_float_option("minInertiaRatio");
+    params.filterByConvexity = this->get_boolean_option("filterByConvexity");
+    params.minConvexity = this->get_float_option("minConvexity");
 
     cv::SimpleBlobDetector detector(params);
     cv::namedWindow("Blobspy", 1);
@@ -126,6 +144,12 @@ int Application::run()
     {
         cv::Mat frame;
         cap >> frame; // get a new frame from camera
+        if (frame.empty())
+        {
+            std::cerr << "Error: Cannot capture frame." << std::endl;
+            return 1;
+            // continue;
+        }
         // Convert it to grayscale
         cv::cvtColor(frame, edges, CV_BGR2GRAY);
         cv::flip(edges, mirrored_img, 1);

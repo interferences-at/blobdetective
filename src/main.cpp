@@ -64,14 +64,28 @@ int main(int argc, char** argv)
     configuration.add_option_int("video_width", 640);
     configuration.add_option_int("video_height", 480);
 
+    // SimpleBlobDetector params:
+    configuration.add_option_int("thresholdStep", 10);
     configuration.add_option_float("minThreshold", 0.0);
+    //configuration.add_option_int("maxCentersDist", 10);
     configuration.add_option_float("maxThreshold", 50.0);
     configuration.add_option_float("minDistBetweenBlobs", 10.0);
+    configuration.add_option_float("minCircularity", 0.2);
     configuration.add_option_boolean("filterByArea", true);
     configuration.add_option_int("minArea", 1500);
     configuration.add_option_int("maxArea", 10000);
     configuration.add_option_boolean("filterByCircularity", false);
+    // configuration.add_option_int("defaultKeypointSize", 1);
+    // configuration.add_option_boolean("computeRadius", true);
+    configuration.add_option_boolean("filterByColor", true);
+    configuration.add_option_int("blobColor", 0);
+    configuration.add_option_int("minRepeatability", 2);
+    //configuration.add_option_boolean("isGrayscaleCentroid", false);
+    //configuration.add_option_int("centroidROIMargin", 2);
+    configuration.add_option_boolean("filterByInertia", true);
+    configuration.add_option_float("minInertiaRatio", 0.1);
     configuration.add_option_boolean("filterByConvexity", false);
+    configuration.add_option_float("minConvexity", 0.95);
 
     if (command_line_option_exists(argv, argv + argc, "-h") ||
         command_line_option_exists(argv, argv + argc, "--help"))
