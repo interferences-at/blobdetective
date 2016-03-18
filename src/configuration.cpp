@@ -99,7 +99,7 @@ std::ostream &operator<<(std::ostream &os, const Configuration &configuration)
     {
         std::string name = (*iter);
         const Option *option = configuration.get_option_const(name.c_str());
-        os << (*option) << std::endl;
+        os << "-o " << (*option) << std::endl;
     }
     return os;
 }
