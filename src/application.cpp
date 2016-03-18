@@ -41,9 +41,18 @@ Application::Application(Configuration& configuration)
             std::string("192.168.1.6")); // FIXME
 }
 
+
 int Application::run()
 {
-    cv::VideoCapture cap(this->_configuration.video_device_id);
+    bool verbose = this->get_boolean_option("verbose");
+    std::string video_device_id = this->get_string_option("video_device_id");
+
+    if (verbose)
+    {
+        std::cout << "Opening video device " << video_device_id << std::endl;
+    }
+
+    cv::VideoCapture cap(video_device_id.c_str());
     if (! cap.isOpened())  // check if we succeeded
     {
         return 1;
@@ -168,6 +177,26 @@ int Application::run()
 Application::~Application()
 {
     delete this->osc_interface;
+}
+
+int Application::get_int_option(const char* name)
+{
+    return this->_configuration.get_option(name)->get_int();
+}
+
+float Application::get_float_option(const char* name)
+{
+    return this->_configuration.get_option(name)->get_float();
+}
+
+std::string Application::get_string_option(const char* name)
+{
+    return this->_configuration.get_option(name)->get_string();
+}
+
+bool Application::get_boolean_option(const char* name)
+{
+    return this->_configuration.get_option(name)->get_boolean();
 }
 
 } // end of namespace
