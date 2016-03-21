@@ -7,6 +7,7 @@
 #include <ostream>
 #include <map>
 #include <vector>
+// #include <mutex>
 #include "option.h"
 
 namespace blobdetective {
@@ -28,6 +29,7 @@ struct Configuration
         void add_option_string(const char* name, const char* value);
     private:
         std::map<std::string, Option> _options;
+        //std::mutex _mutex;
 };
 
 std::ostream &operator<<(std::ostream &os, const Configuration &configuration);

@@ -9,55 +9,76 @@ Configuration::Configuration()
 
 bool Configuration::has_option(const char* name) const
 {
-    std::map<std::string, Option>::const_iterator iter = this->_options.find(std::string(name));
+    bool ret = false;
+    // this->_mutex.lock();
+    std::map<std::string, Option>::const_iterator iter =
+            this->_options.find(std::string(name));
     if (iter == this->_options.end())
     {
-        return false;
+        ret = false;
     }
     else
     {
-        return true;
+        ret = true;
     }
+    // this->_mutex.unlock();
+    return ret;
 }
 
-const Option* Configuration::get_option_const(const char *name) const // FIXME: can we use const here?
+const Option* Configuration::get_option_const(const char *name) const
 {
-    std::map<std::string, Option>::const_iterator iter = this->_options.find(std::string(name));
+    const Option* ret = NULL;
+    // this->_mutex.lock();
+    std::map<std::string, Option>::const_iterator iter =
+            this->_options.find(std::string(name));
     if (iter == this->_options.end())
     {
-        return NULL;
+        ret = NULL;
     }
     else
     {
-        return & (iter->second);
+        ret = & (iter->second);
     }
+    // this->_mutex.unlock();
+    return ret;
 }
 
 Option* Configuration::get_option(const char *name)
 {
-    std::map<std::string, Option>::iterator iter = this->_options.find(std::string(name));
+    // this->_mutex.lock();
+    Option* ret = NULL;
+    std::map<std::string, Option>::iterator iter = this->_options.find(
+            std::string(name));
     if (iter == this->_options.end())
     {
-        return NULL;
+        ret = NULL;
     }
     else
     {
-        return & (iter->second);
+        ret = & (iter->second);
     }
+    // this->_mutex.unlock();
+    return ret;
 }
 
 void Configuration::add_option(const char* name, Option option)
 {
-    this->_options.insert(std::map<std::string, Option>::value_type(std::string(name), option));
+    // this->_mutex.lock();
+    this->_options.insert(std::map<std::string,
+            Option>::value_type(std::string(name), option));
+    // this->_mutex.unlock();
 }
 
 const std::vector<std::string> Configuration::list_options() const
 {
     std::vector<std::string> ret;
-    for (std::map<std::string, Option>::const_iterator item = this->_options.begin(); item != this->_options.end(); ++item)
+    // this->_mutex.lock();
+    for (std::map<std::string, Option>::const_iterator item =
+            this->_options.begin(); item != this->_options.end(); ++item)
     {
         ret.push_back(item->second.get_name());
     }
+    // this->_mutex.unlock();
     return ret;
 }
 
