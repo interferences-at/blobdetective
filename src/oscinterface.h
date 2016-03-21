@@ -23,6 +23,7 @@
 
 #include <string>
 #include "oscsender.h"
+#include "oscreceiver.h"
 
 namespace blobdetective {
 
@@ -34,8 +35,12 @@ class OscInterface
         OscInterface(
                 const std::string &peer_identifier,
                 const std::string &send_port,
-                const std::string &send_addr); 
+                const std::string &send_addr,
+                const std::string &receive_port
+                ); 
         ~OscInterface();
+        bool is_verbose();
+        void start_receiver();
         /**
          * Sends blob position.
          */
@@ -43,6 +48,25 @@ class OscInterface
     private:
         std::string peer_id;
         OscSender sender_;
+        bool send_enabled_;
+        bool receiving_enabled_;
+        OscReceiver receiver_;
+        static int option_int_cb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+        static int option_string_cb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+        static int option_float_cb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+        static int option_boolean_cb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+        void receive_int_option_cb(const char* name, int value);
+        void receive_float_option_cb(const char* name, float value);
+        void receive_boolean_option_cb(const char* name, bool value);
+        void receive_string_option_cb(const char* name, const char* value);
 };
 
 } // end of namespace

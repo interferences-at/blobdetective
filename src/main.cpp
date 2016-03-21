@@ -57,6 +57,7 @@ int main(int argc, char** argv)
 {
     blobdetective::Configuration configuration = blobdetective::Configuration();
     configuration.add_option_int("osc_send_port", 31340);
+    configuration.add_option_int("osc_receive_port", 31444);
     configuration.add_option_string("osc_send_host", "127.0.0.1");
     configuration.add_option_string("identifier", "default");
     configuration.add_option_boolean("verbose", false);
