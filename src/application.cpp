@@ -45,6 +45,7 @@ Application::Application(Configuration& configuration)
 
     // Setup OSC sender
     this->osc_interface = new OscInterface(
+            this,
             this->get_string_option("identifier"),
             int_to_string(this->get_int_option("osc_send_port")).c_str(),
             this->get_string_option("osc_send_host"),
@@ -223,6 +224,11 @@ std::string Application::get_string_option(const char* name)
 bool Application::get_boolean_option(const char* name)
 {
     return this->_configuration.get_option(name)->get_boolean();
+}
+
+Configuration* Application::get_configuration()
+{
+    return ( & this->_configuration);
 }
 
 } // end of namespace

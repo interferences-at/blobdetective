@@ -14,6 +14,7 @@ class Application
         Application(Configuration& configuration);
         ~Application();
         int run();
+        Configuration* get_configuration();
     private:
         Configuration _configuration;
         OscInterface *osc_interface;

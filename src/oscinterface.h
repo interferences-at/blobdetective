@@ -27,12 +27,15 @@
 
 namespace blobdetective {
 
+class Application; // forward declaration
+
 /** Open Sound Control sending and receiving for this app.
  */
 class OscInterface 
 {
     public:
         OscInterface(
+                Application* application,
                 const std::string &peer_identifier,
                 const std::string &send_port,
                 const std::string &send_addr,
@@ -41,11 +44,13 @@ class OscInterface
         ~OscInterface();
         bool is_verbose();
         void start_receiver();
+        Application* get_application();
         /**
          * Sends blob position.
          */
         void send_blob_position(float x, float y, float size);
     private:
+        Application* application_;
         std::string peer_id;
         OscSender sender_;
         bool send_enabled_;
@@ -61,6 +66,9 @@ class OscInterface
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
         static int option_boolean_cb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+        static int ping_cb(const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
         void receive_int_option_cb(const char* name, int value);
