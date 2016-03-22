@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <sstream>
 
+/**
+ * Converts a string to an int.
+ */
 template<typename T>
 T from_string(const std::string& str)
 {
@@ -11,7 +14,8 @@ T from_string(const std::string& str)
     return ret;
 }
 
-static char* get_command_line_option_argument_1(char** begin, char** end, const std::string& option)
+static char* get_command_line_option_argument_1(char** begin, char** end,
+        const std::string& option)
 {
     char** iter = std::find(begin, end, option);
     if (iter != end && ++iter != end)
@@ -21,7 +25,8 @@ static char* get_command_line_option_argument_1(char** begin, char** end, const 
     return 0;
 }
 
-static char* get_command_line_option_argument_2(char** begin, char** end, const std::string& option)
+static char* get_command_line_option_argument_2(char** begin, char** end,
+        const std::string& option)
 {
     char** iter = std::find(begin, end, option);
     if (iter != end && ++iter != end)
@@ -38,18 +43,21 @@ static char* get_command_line_option_argument_2(char** begin, char** end, const 
     return 0;
 }
 
-static bool command_line_option_exists(char** begin, char** end, const std::string& option)
+static bool command_line_option_exists(char** begin, char** end,
+        const std::string& option)
 {
     return std::find(begin, end, option) != end;
 }
 
 static void print_help(const char* program_name)
 {
-    std::cout << "Usage: " << std::string(program_name) << " [options]" << std::endl;
+    std::cout << "Usage: " << std::string(program_name) << " [options]"
+            << std::endl;
     std::cout << " -h,--help Print help and exit" << std::endl;
     std::cout << " -v,--verbose Set output to verbose" << std::endl;
     std::cout << " -l List options and exit" << std::endl;
-    std::cout << " -d [value] Set the video device identifier. /dev/video0" << std::endl;
+    std::cout << " -d [value] Set the video device identifier. /dev/video0"
+            << std::endl;
     std::cout << " -o [name] [value] Sets an option value" << std::endl;
 }
 
@@ -148,7 +156,8 @@ int main(int argc, char** argv)
         }
         else
         {
-            std::cerr << "Error: No such option: " << std::string(name) << std::endl;
+            std::cerr << "Error: No such option: " << std::string(name)
+                    << std::endl;
             // print_help("blobdetective");
             return 1;
         }
@@ -162,3 +171,4 @@ int main(int argc, char** argv)
     blobdetective::Application app(configuration);
     return app.run();
 }
+

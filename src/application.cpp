@@ -67,6 +67,8 @@ int Application::run()
     cv::VideoCapture cap(video_device_id.c_str());
     if (! cap.isOpened())  // check if we succeeded
     {
+        std::cerr << "Error: Could not open video device " << video_device_id
+                << std::endl;
         return 1;
     }
 
