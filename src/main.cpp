@@ -57,7 +57,7 @@ int main(int argc, char** argv)
     configuration.add_option_string("osc_send_host", "127.0.0.1");
     configuration.add_option_string("identifier", "default");
     configuration.add_option_boolean("verbose", false);
-    configuration.add_option_string("video_device_id", "/dev/video0");
+    configuration.add_option_string("video_device_id", "0");
     configuration.add_option_int("video_width", 640);
     configuration.add_option_int("video_height", 480);
 
