@@ -1,18 +1,6 @@
 #include "application.h"
+#include "convert.h"
 #include <algorithm>
-#include <sstream>
-
-/**
- * Converts a string to an int.
- */
-template<typename T>
-T from_string(const std::string& str)
-{
-    std::istringstream ss(str);
-    T ret;
-    ss >> ret;
-    return ret;
-}
 
 static char* get_command_line_option_argument_1(char** begin, char** end,
         const std::string& option)
@@ -137,12 +125,12 @@ int main(int argc, char** argv)
             else if (option->is_int())
             {
                 // TODO: catch exceptions
-                option->set_int(from_string<int>(value));
+                option->set_int(blobdetective::from_string<int>(value));
             }
             else if (option->is_float())
             {
                 // TODO: catch exceptions
-                option->set_float(from_string<float>(value));
+                option->set_float(blobdetective::from_string<float>(value));
             }
             else if (option->is_boolean())
             {

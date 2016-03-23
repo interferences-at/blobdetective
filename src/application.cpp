@@ -1,6 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include "application.h"
+#include "convert.h"
 
 namespace blobdetective {
 
@@ -58,33 +59,46 @@ int Application::run()
 {
     bool verbose = this->get_boolean_option("verbose");
     std::string video_device_id = this->get_string_option("video_device_id");
+    int video_device_index = -1;
+    try
+    {
+        video_device_index = from_string<int>(video_device_id);
+    }
+    catch (const std::runtime_error &e)
+    {
+        if (verbose)
+        {
+            std::cerr << "Error converting string to int: "
+                    << e.what() << std::endl;
+        }
+    }
 
     if (verbose)
     {
+        std::cout << "video_device_index: " << video_device_index << std::endl;
         std::cout << "Opening video device " << video_device_id << "..."
                 << std::endl;
     }
 
-    cv::VideoCapture cap(video_device_id.c_str());
-    if (cap.isOpened())  // check if we succeeded
+    cv::VideoCapture* cap = NULL;
+    if (video_device_index == -1)
+    {
+        cap = new cv::VideoCapture(video_device_id.c_str());
+    }
+    else
+    {
+        cap = new cv::VideoCapture(video_device_index);
+    }
+
+    if (cap->isOpened())  // check if we succeeded
     {
         if (verbose)
         {
             std::cout << "Success opening video device." << std::endl;
             std::cout << "CV_CAP_PROP_FRAME_WIDTH: "
-                    << cap.get(CV_CAP_PROP_FRAME_WIDTH);
+                    << cap->get(CV_CAP_PROP_FRAME_WIDTH) << std::endl;
             std::cout << "CV_CAP_PROP_FRAME_HEIGHT: "
-                    << cap.get(CV_CAP_PROP_FRAME_HEIGHT);
-            std::cout << "CV_CAP_PROP_FPS: "
-                    << cap.get(CV_CAP_PROP_FPS);
-            std::cout << "CV_CAP_PROP_FOURCC: "
-                    << cap.get(CV_CAP_PROP_FOURCC);
-            std::cout << "CV_CAP_PROP_FORMAT: "
-                    << cap.get(CV_CAP_PROP_FORMAT);
-            std::cout << "CV_CAP_PROP_MODE: "
-                    << cap.get(CV_CAP_PROP_MODE);
-            std::cout << "CV_CAP_PROP_CONVERT_RGB: "
-                    << cap.get(CV_CAP_PROP_CONVERT_RGB);
+                    << cap->get(CV_CAP_PROP_FRAME_HEIGHT) << std::endl;
         }
     }
     else
@@ -170,7 +184,7 @@ int Application::run()
     while (true)
     {
         cv::Mat frame;
-        cap >> frame; // get a new frame from camera
+        (*cap) >> frame; // get a new frame from camera
         if (frame.empty())
         {
             std::cerr << "Error: Cannot capture frame." << std::endl;
@@ -219,6 +233,10 @@ int Application::run()
             break;
         }
         // TODO: also stop if the window has been destroyed
+    }
+    if (cap != NULL)
+    {
+        delete cap;
     }
     std::cout << "Done" << std::endl;
     // the camera will be deinitialized automatically in VideoCapture destructor

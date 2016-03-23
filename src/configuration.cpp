@@ -4,7 +4,6 @@ namespace blobdetective {
 
 Configuration::Configuration()
 {
-    this->video_device_id = 0;
 }
 
 bool Configuration::has_option(const char* name) const

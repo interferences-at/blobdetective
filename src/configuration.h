@@ -16,13 +16,11 @@ struct Configuration
 {
     public:
         Configuration();
-        int video_device_id;
         bool has_option(const char* name) const;
         Option* get_option(const char *name);
         const Option* get_option_const(const char *name) const;
         const std::vector<std::string> list_options() const;
         void add_option(const char* name, Option option);
-
         void add_option_boolean(const char* name, bool value);
         void add_option_int(const char* name, int value);
         void add_option_float(const char* name, float value);
