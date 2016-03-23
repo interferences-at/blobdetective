@@ -61,11 +61,33 @@ int Application::run()
 
     if (verbose)
     {
-        std::cout << "Opening video device " << video_device_id << std::endl;
+        std::cout << "Opening video device " << video_device_id << "..."
+                << std::endl;
     }
 
     cv::VideoCapture cap(video_device_id.c_str());
-    if (! cap.isOpened())  // check if we succeeded
+    if (cap.isOpened())  // check if we succeeded
+    {
+        if (verbose)
+        {
+            std::cout << "Success opening video device." << std::endl;
+            std::cout << "CV_CAP_PROP_FRAME_WIDTH: "
+                    << cap.get(CV_CAP_PROP_FRAME_WIDTH);
+            std::cout << "CV_CAP_PROP_FRAME_HEIGHT: "
+                    << cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+            std::cout << "CV_CAP_PROP_FPS: "
+                    << cap.get(CV_CAP_PROP_FPS);
+            std::cout << "CV_CAP_PROP_FOURCC: "
+                    << cap.get(CV_CAP_PROP_FOURCC);
+            std::cout << "CV_CAP_PROP_FORMAT: "
+                    << cap.get(CV_CAP_PROP_FORMAT);
+            std::cout << "CV_CAP_PROP_MODE: "
+                    << cap.get(CV_CAP_PROP_MODE);
+            std::cout << "CV_CAP_PROP_CONVERT_RGB: "
+                    << cap.get(CV_CAP_PROP_CONVERT_RGB);
+        }
+    }
+    else
     {
         std::cerr << "Error: Could not open video device " << video_device_id
                 << std::endl;
