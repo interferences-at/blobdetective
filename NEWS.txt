@@ -1,6 +1,10 @@
 Release notes for BlobDetective
 ===============================
 
+2016-0?-?? - blobdetective 0.1.?
+--------------------------------
+* 
+
 2016-03-23 - blobdetective 0.1.0
 --------------------------------
 Initial release.
