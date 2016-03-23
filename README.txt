@@ -1,6 +1,6 @@
-Blobdetective
+BlobDetective
 =============
-Blobdetective is a blob tracker that sends OSC messages.
+BlobDetective is a blob tracker that sends OSC messages.
 
 Author: Alexandre Quessy <alexandre@quessy.net>
 Date: 2016
@@ -46,6 +46,6 @@ To list the options::
     -o osc_send_port 31340
     -o thresholdStep 10
     -o verbose false
-    -o video_device_id "/dev/video0"
+    -o video_device_id "0"
     -o video_height 480
     -o video_width 640
