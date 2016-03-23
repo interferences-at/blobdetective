@@ -23,6 +23,7 @@ class Application
         float get_float_option(const char* name);
         std::string get_string_option(const char* name);
         bool get_boolean_option(const char* name);
+        cv::SimpleBlobDetector::Params detector_params_from_options();
 };
 
 } // end of namespace

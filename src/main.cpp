@@ -75,6 +75,8 @@ int main(int argc, char** argv)
     // configuration.add_option_int("defaultKeypointSize", 1);
     // configuration.add_option_boolean("computeRadius", true);
     configuration.add_option_boolean("filterByColor", true);
+    // Use blobColor = 0 to extract dark blobs
+    // and blobColor = 255 to extract light blobs.
     configuration.add_option_int("blobColor", 0);
     configuration.add_option_int("minRepeatability", 2);
     //configuration.add_option_boolean("isGrayscaleCentroid", false);

@@ -109,7 +109,72 @@ int Application::run()
     }
 
     cv::Mat edges;
+    cv::SimpleBlobDetector::Params params = this->detector_params_from_options();
+    cv::SimpleBlobDetector* detector = new cv::SimpleBlobDetector(params);
+    cv::namedWindow("Blobspy", 1);
+    cv::Mat mirrored_img;
+    std::cout << "Press any key to quit" << std::endl;
 
+    while (true)
+    {
+        cv::Mat frame;
+        (*cap) >> frame; // get a new frame from camera
+        if (frame.empty())
+        {
+            std::cerr << "Error: Cannot capture frame." << std::endl;
+            return 1;
+            // continue;
+        }
+        // Convert it to grayscale
+        cv::cvtColor(frame, edges, CV_BGR2GRAY);
+        cv::flip(edges, mirrored_img, 1);
+
+        // Blur
+        // cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
+
+        // Invert colors
+        cv::Mat inv_src = cv::Scalar::all(255) - mirrored_img;
+
+        // Detect blobs.
+        std::vector<cv::KeyPoint> keypoints;
+        // detector->detect(inv_src, keypoints);
+        detector->detect(inv_src, keypoints);
+ 
+        // Draw detected blobs as red circles.
+        // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the
+        // circle corresponds to the size of blob
+        cv::Mat im_with_keypoints;
+        //cv::drawKeypoints(frame, keypoints, im_with_keypoints,
+        cv::drawKeypoints(mirrored_img, keypoints, im_with_keypoints,
+                cv::Scalar(0, 0, 255),
+                cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+        // Send OSC
+        send_blob_coordinates(keypoints);
+
+        // Show blobs
+        cv::imshow("Blobspy", im_with_keypoints);
+
+        if (cv::waitKey(30) >= 0)
+        {
+            break;
+        }
+        // TODO: also stop if the window has been destroyed
+    }
+    if (cap != NULL)
+    {
+        delete cap;
+    }
+    if (detector != NULL)
+    {
+        delete detector;
+    }
+    std::cout << "Done" << std::endl;
+    return 0;
+}
+
+cv::SimpleBlobDetector::Params Application::detector_params_from_options()
+{
     // Default values of parameters are tuned to extract dark circular blobs.
     cv::SimpleBlobDetector::Params params;
 
@@ -176,71 +241,7 @@ int Application::run()
     params.filterByConvexity = this->get_boolean_option("filterByConvexity");
     params.minConvexity = this->get_float_option("minConvexity");
 
-    cv::SimpleBlobDetector detector(params);
-    cv::namedWindow("Blobspy", 1);
-    cv::Mat mirrored_img;
-    std::cout << "Press any key to quit" << std::endl;
-
-    while (true)
-    {
-        cv::Mat frame;
-        (*cap) >> frame; // get a new frame from camera
-        if (frame.empty())
-        {
-            std::cerr << "Error: Cannot capture frame." << std::endl;
-            return 1;
-            // continue;
-        }
-        // Convert it to grayscale
-        cv::cvtColor(frame, edges, CV_BGR2GRAY);
-        cv::flip(edges, mirrored_img, 1);
-
-        // Blur
-        // cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
-
-        // Invert colors
-        cv::Mat inv_src = cv::Scalar::all(255) - mirrored_img;
-
-        // No need to do a threshold manually, since the SimpleBlobDetector does it
-        // cv::cvAdaptiveThreshold(inv_src, inv_src, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 13, 1);
-        // int threshold_value = 0;
-        // int const max_BINARY_value = 255;
-        // //int threshold_type = 0; // 1: Binary
-        // int threshold_type = 1; // 1: Binary Inverted
-        // cv::threshold(inv_src, inv_src, threshold_value, max_BINARY_value,threshold_type );
-
-        // Detect blobs.
-        std::vector<cv::KeyPoint> keypoints;
-        detector.detect(inv_src, keypoints);
- 
-        // Draw detected blobs as red circles.
-        // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the
-        // circle corresponds to the size of blob
-        cv::Mat im_with_keypoints;
-        //cv::drawKeypoints(frame, keypoints, im_with_keypoints,
-        cv::drawKeypoints(inv_src, keypoints, im_with_keypoints,
-                cv::Scalar(0, 0, 255),
-                cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
-        // Send OSC
-        send_blob_coordinates(keypoints);
-
-        // Show blobs
-        cv::imshow("Blobspy", im_with_keypoints);
-
-        if (cv::waitKey(30) >= 0)
-        {
-            break;
-        }
-        // TODO: also stop if the window has been destroyed
-    }
-    if (cap != NULL)
-    {
-        delete cap;
-    }
-    std::cout << "Done" << std::endl;
-    // the camera will be deinitialized automatically in VideoCapture destructor
-    return 0;
+    return params;
 }
 
 Application::~Application()
