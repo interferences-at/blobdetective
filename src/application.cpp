@@ -153,11 +153,18 @@ int Application::run()
         send_blob_coordinates(keypoints);
 
         // Show blobs
-        cv::imshow("Blobspy", im_with_keypoints);
+        cv::imshow("BlobDetective", im_with_keypoints);
 
-        if (cv::waitKey(30) >= 0)
+        // if you don't call waitKey, HighGui cannot process windows events
+        // like redraw, resizing, input event etc. So just call it, even
+        // with a 1ms delay
+        char k;
+        if (k = cv::waitKey(1))
         {
-            break;
+            if (k == 'q') // press 'q' to quit
+            {
+                break;
+            }
         }
         // TODO: also stop if the window has been destroyed
     }
