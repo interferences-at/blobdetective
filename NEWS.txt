@@ -1,0 +1,11 @@
+Release notes for BlobDetective
+===============================
+
+2016-03-23 - blobdetective 0.1.0
+--------------------------------
+Initial release.
+
+* Detect biggest white blobs and send it over OSC.
+* Parse int/float/string/boolean options from the command-line
+* Open video capture device by index
+* Press q to quit

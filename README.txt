@@ -13,6 +13,8 @@ See INSTALL.txt
 
 Usage and options
 -----------------
+Colors are inverted, so 0 means white, not black, and 255 means black.
+
 The print the help message::
 
     $ ./blobdetective -h
