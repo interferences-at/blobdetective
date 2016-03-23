@@ -5,6 +5,8 @@
 
 namespace blobdetective {
 
+static const char* WINDOW_NAME = "BlobDetective";
+
 static std::string int_to_string(int value)
 {
     std::stringstream ss;
@@ -111,7 +113,8 @@ int Application::run()
     cv::Mat edges;
     cv::SimpleBlobDetector::Params params = this->detector_params_from_options();
     cv::SimpleBlobDetector* detector = new cv::SimpleBlobDetector(params);
-    cv::namedWindow("Blobspy", 1);
+    cv::namedWindow(WINDOW_NAME, CV_WINDOW_AUTOSIZE | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED);
+    cv::moveWindow(WINDOW_NAME, 100, 100);
     cv::Mat mirrored_img;
     std::cout << "Press any key to quit" << std::endl;
 
@@ -153,7 +156,7 @@ int Application::run()
         send_blob_coordinates(keypoints);
 
         // Show blobs
-        cv::imshow("BlobDetective", im_with_keypoints);
+        cv::imshow(WINDOW_NAME, im_with_keypoints);
 
         // if you don't call waitKey, HighGui cannot process windows events
         // like redraw, resizing, input event etc. So just call it, even
