@@ -2,6 +2,9 @@
 #include "convert.h"
 #include <algorithm>
 
+static const char* PROGRAM_NAME = "blobdetective";
+static const char* VERSION = "0.1.1";
+
 static char* get_command_line_option_argument_1(char** begin, char** end,
         const std::string& option)
 {
@@ -42,6 +45,7 @@ static void print_help(const char* program_name)
     std::cout << "Usage: " << std::string(program_name) << " [options]"
             << std::endl;
     std::cout << " -h,--help Print help and exit" << std::endl;
+    std::cout << " --version Print version and exit" << std::endl;
     std::cout << " -v,--verbose Set output to verbose" << std::endl;
     std::cout << " -l List options and exit" << std::endl;
     std::cout << " -d [value] Set the video device identifier. /dev/video0"
@@ -89,7 +93,12 @@ int main(int argc, char** argv)
     if (command_line_option_exists(argv, argv + argc, "-h") ||
         command_line_option_exists(argv, argv + argc, "--help"))
     {
-        print_help("blobdetective");
+        print_help(PROGRAM_NAME);
+        return 0;
+    }
+    if (command_line_option_exists(argv, argv + argc, "--version"))
+    {
+        std::cout << PROGRAM_NAME << " " << VERSION << std::endl;
         return 0;
     }
     if (command_line_option_exists(argv, argv + argc, "-v") ||
