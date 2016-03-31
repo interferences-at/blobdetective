@@ -116,21 +116,29 @@ int main(int argc, char** argv)
         std::cout << configuration << std::endl;
         return 0;
     }
-    if (command_line_option_exists(argv, argv + argc, "-o"))
+
+    const std::vector<std::string> names = configuration.list_options();
+    std::vector<std::string>::const_iterator iter;
+    for (iter = names.begin(); iter < names.end(); ++iter)
     {
-        char* name = get_command_line_option_argument_1(argv, argv + argc, "-o");
-        char* value = get_command_line_option_argument_2(argv, argv + argc, "-o");
-        if (value == 0)
+        std::string name = (*iter);
+        blobdetective::Option *option = configuration.get_option(name.c_str());
+        if (command_line_option_exists(argv, argv + argc, name.c_str()))
         {
-            std::cerr << "Error: option should have a value" << std::endl;
-            print_help("blobdetective");
-            return 1;
-        }
-        if (configuration.has_option(name))
-        {
-            blobdetective::Option* option = configuration.get_option(name);
+            char* value = get_command_line_option_argument_1(
+                    argv, argv + argc, name.c_str());
+            if (value == 0)
+            {
+                std::cerr << "Error: option should have a value" << std::endl;
+                print_help("blobdetective");
+                return 1;
+            }
             if (option->is_string())
             {
+                if (configuration.get_option("verbose")->get_boolean())
+                {
+                    std::cout << "SET VALUE " << name << "=" << value << std::endl;
+                }
                 option->set_string(value);
             }
             else if (option->is_int())
@@ -153,13 +161,13 @@ int main(int argc, char** argv)
                 option->set_boolean(boolean_value);
             }
         }
-        else
-        {
-            std::cerr << "Error: No such option: " << std::string(name)
-                    << std::endl;
-            // print_help("blobdetective");
-            return 1;
-        }
+        // else
+        // {
+        //     std::cerr << "Error: No such option: " << std::string(name)
+        //             << std::endl;
+        //     // print_help("blobdetective");
+        //     return 1;
+        // }
     }
 
     if (configuration.get_option("verbose")->get_boolean())
