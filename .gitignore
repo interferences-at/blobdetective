@@ -29,3 +29,4 @@ libtool
 ltmain.sh
 nohup.out
 src/blobdetective
+prototypes/threads/out
