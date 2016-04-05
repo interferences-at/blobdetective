@@ -116,7 +116,7 @@ int Application::run()
     cv::namedWindow(WINDOW_NAME, CV_WINDOW_AUTOSIZE | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED);
     cv::moveWindow(WINDOW_NAME, 100, 100);
     cv::Mat mirrored_img;
-    std::cout << "Press any key to quit" << std::endl;
+    std::cout << "Press Q to quit" << std::endl;
 
     while (true)
     {
