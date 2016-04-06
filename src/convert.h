@@ -2,6 +2,7 @@
 #define __CONVERT_H__
 
 #include <sstream>
+#include <stdexcept>
 
 namespace blobdetective {
 
