@@ -49,7 +49,7 @@ Application::Application(Configuration& configuration)
     // Setup OSC sender
     this->osc_interface = new OscInterface(
             this,
-            this->get_string_option("identifier"),
+            this->get_int_option("identifier"),
             int_to_string(this->get_int_option("osc_send_port")).c_str(),
             this->get_string_option("osc_send_host"),
             int_to_string(this->get_int_option("osc_receive_port")).c_str()

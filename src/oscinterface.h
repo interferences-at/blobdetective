@@ -36,7 +36,7 @@ class OscInterface
     public:
         OscInterface(
                 Application* application,
-                const std::string &peer_identifier,
+                int peer_identifier,
                 const std::string &send_port,
                 const std::string &send_addr,
                 const std::string &receive_port
@@ -51,7 +51,7 @@ class OscInterface
         void send_blob_position(float x, float y, float size);
     private:
         Application* application_;
-        std::string peer_id;
+        int peer_id;
         OscSender sender_;
         bool send_enabled_;
         bool receiving_enabled_;

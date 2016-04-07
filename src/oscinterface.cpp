@@ -7,7 +7,7 @@ namespace blobdetective {
 
 OscInterface::OscInterface(
         Application* application,
-        const std::string &peer_identifier,
+        int peer_identifier,
         const std::string &send_port,
         const std::string &send_addr,
         const std::string &receive_port)
@@ -104,7 +104,7 @@ int OscInterface::option_float_cb(
 
 void OscInterface::send_blob_position(float x, float y, float size)
 {
-    sender_.sendMessage("/blob", "sfff", this->peer_id.c_str(), x, y, size, LO_ARGS_END);
+    sender_.sendMessage("/blob", "ifff", this->peer_id, x, y, size, LO_ARGS_END);
 }
 
 OscInterface::~OscInterface()
