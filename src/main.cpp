@@ -123,6 +123,7 @@ int main(int argc, char** argv)
     {
         std::string name = (*iter);
         blobdetective::Option *option = configuration.get_option(name.c_str());
+
         if (command_line_option_exists(argv, argv + argc, name.c_str()))
         {
             char* value = get_command_line_option_argument_1(
@@ -153,12 +154,7 @@ int main(int argc, char** argv)
             }
             else if (option->is_boolean())
             {
-                bool boolean_value = false;
-                if (value == "true" || value == "yes" || value == "1")
-                {
-                    boolean_value = true;
-                }
-                option->set_boolean(boolean_value);
+                option->set_boolean(blobdetective::from_string<bool>(value));
             }
         }
         // else
