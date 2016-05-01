@@ -6,3 +6,13 @@ Ubuntu 15.10
 sudo apt-get install build-essential libopencv-dev liblo-dev
 cd ./src/
 make
+
+Setting the camera settings
+---------------------------
+You can see the available controls you can adjust with:
+
+v4l2-ctl --list-ctrls
+and you can adjust what you want using something like:
+
+v4l2-ctl --set-ctrl exposure=96
+v4l2-ctl --set-ctrl gain=30
