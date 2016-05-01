@@ -94,14 +94,23 @@ int Application::run()
 
     if (cap->isOpened())  // check if we succeeded
     {
-        // Try to set FPS:
-        const int DESIRED_CAMERA_FPS = 60;
+        // Try to set FPS, width and height:
+        int video_fps = this->get_int_option("video_fps");
+        int frame_width = this->get_int_option("video_width");
+        int frame_height = this->get_int_option("video_height");
+
         if (verbose)
         {
             std::cout << "Try to set CV_CAP_PROP_FPS to "
-                    << DESIRED_CAMERA_FPS << std::endl;
+                    << video_fps << std::endl;
+            std::cout << "Try to set CV_CAP_PROP_FRAME_WIDTH to "
+                    << frame_width << std::endl;
+            std::cout << "Try to set CV_CAP_PROP_FRAME_HEIGHT to "
+                    << frame_height << std::endl;
         }
-        cap->set(CV_CAP_PROP_FPS, DESIRED_CAMERA_FPS);
+        cap->set(CV_CAP_PROP_FPS, video_fps);
+        cap->set(CV_CAP_PROP_FRAME_WIDTH, frame_width);
+        cap->set(CV_CAP_PROP_FRAME_HEIGHT, frame_height);
 
         // Query camera properties:
         if (verbose)
