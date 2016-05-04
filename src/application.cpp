@@ -35,10 +35,22 @@ void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoin
         }
         float x = keypoints[biggest_index].pt.x;
         float y = keypoints[biggest_index].pt.y;
+        x = this->convert_x_to_final_range(x);
+        y = this->convert_y_to_final_range(y);
         float size = keypoints[biggest_index].size;
         // std::cout << "TODO Send /blob " << x << ", " << y << " " << size << std::endl;
         this->osc_interface->send_blob_position(x, y, size);
     }
+}
+
+float Application::convert_x_to_final_range(float value)
+{
+    return (value / this->frame_width) * 640; // FIXME
+}
+
+float Application::convert_y_to_final_range(float value)
+{
+    return (value / this->frame_height) * 480; // FIXME
 }
 
 Application::Application(Configuration& configuration)
@@ -92,13 +104,12 @@ int Application::run()
         cap = new cv::VideoCapture(video_device_index);
     }
 
+    int video_fps = this->get_int_option("video_fps");
+    this->frame_width = this->get_int_option("video_width");
+    this->frame_height = this->get_int_option("video_height");
     if (cap->isOpened())  // check if we succeeded
     {
         // Try to set FPS, width and height:
-        int video_fps = this->get_int_option("video_fps");
-        int frame_width = this->get_int_option("video_width");
-        int frame_height = this->get_int_option("video_height");
-
         if (verbose)
         {
             std::cout << "Try to set CV_CAP_PROP_FPS to "
@@ -149,6 +160,9 @@ int Application::run()
             return 1;
             // continue;
         }
+        // First of all, resize the image if needed.
+        // FIXME: we might need to check if it is needed
+        cv::resize(frame, frame, cv::Size(frame_width, frame_height));
         // Convert it to grayscale
         cv::cvtColor(frame, edges, CV_BGR2GRAY);
         cv::flip(edges, mirrored_img, 1);
@@ -168,7 +182,6 @@ int Application::run()
         // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the
         // circle corresponds to the size of blob
         cv::Mat im_with_keypoints;
-        //cv::drawKeypoints(frame, keypoints, im_with_keypoints,
         cv::drawKeypoints(mirrored_img, keypoints, im_with_keypoints,
                 cv::Scalar(0, 0, 255),
                 cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);

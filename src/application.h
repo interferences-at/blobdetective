@@ -18,12 +18,16 @@ class Application
     private:
         Configuration _configuration;
         OscInterface *osc_interface;
+        int frame_width;
+        int frame_height;
         void send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints);
         int get_int_option(const char* name);
         float get_float_option(const char* name);
         std::string get_string_option(const char* name);
         bool get_boolean_option(const char* name);
         cv::SimpleBlobDetector::Params detector_params_from_options();
+        float convert_x_to_final_range(float value);
+        float convert_y_to_final_range(float value);
 };
 
 } // end of namespace
