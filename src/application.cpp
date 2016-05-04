@@ -6,12 +6,26 @@
 namespace blobdetective {
 
 static const char* WINDOW_NAME = "BlobDetective";
+static const int SOURCE_WIDTH = 640; // FIXME
+static const int SOURCE_HEIGHT = 480; // FIXME
 
 static std::string int_to_string(int value)
 {
     std::stringstream ss;
     ss << value;
     return ss.str();
+}
+
+/**
+ * We need to change areas since the scale the source image.
+ * (for faster computation)
+ * So, basically, we need the square root.
+ */
+static float convert_area_given_ratio(
+        float area, int source_size, int desired_size)
+{
+    float ratio = desired_size / (float) source_size;
+    return area * (ratio * ratio); // FIXME
 }
 
 void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints)
@@ -45,12 +59,12 @@ void Application::send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoin
 
 float Application::convert_x_to_final_range(float value)
 {
-    return (value / this->frame_width) * 640; // FIXME
+    return (value / this->frame_width) * SOURCE_WIDTH; // FIXME
 }
 
 float Application::convert_y_to_final_range(float value)
 {
-    return (value / this->frame_height) * 480; // FIXME
+    return (value / this->frame_height) * SOURCE_HEIGHT; // FIXME
 }
 
 Application::Application(Configuration& configuration)
@@ -267,8 +281,12 @@ cv::SimpleBlobDetector::Params Application::detector_params_from_options()
     // Extracted blobs have an area between minArea (inclusive) and
     // maxArea (exclusive).
     params.filterByArea = this->get_boolean_option("filterByArea");
-    params.minArea = this->get_int_option("minArea");
-    params.maxArea = this->get_int_option("maxArea");
+    params.minArea = convert_area_given_ratio(
+            this->get_int_option("minArea"),
+            SOURCE_WIDTH, this->get_int_option("video_width"));
+    params.maxArea = convert_area_given_ratio(
+            this->get_int_option("maxArea"),
+            SOURCE_HEIGHT, this->get_int_option("video_height"));
 
     params.filterByCircularity = this->get_boolean_option("filterByCircularity");
     params.minCircularity = this->get_boolean_option("minCircularity");
