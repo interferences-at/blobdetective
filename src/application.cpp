@@ -145,6 +145,8 @@ int Application::run()
                     << cap->get(CV_CAP_PROP_FRAME_WIDTH) << std::endl;
             std::cout << "CV_CAP_PROP_FRAME_HEIGHT: "
                     << cap->get(CV_CAP_PROP_FRAME_HEIGHT) << std::endl;
+            std::cout << "This is likely to cause an error:" << std::endl;
+            std::cout << "(but it's just a property that is not in this version of OpenCV)" << std::endl;
             std::cout << "CV_CAP_PROP_FPS: "
                     << cap->get(CV_CAP_PROP_FPS) << std::endl;
         }
