@@ -2,7 +2,10 @@ BlobDetective
 =============
 BlobDetective is a blob tracker that sends OSC messages.
 
-Author: Alexandre Quessy <alexandre@quessy.net>
+Authors:
+* Alexandre Quessy <alexandre@quessy.net>
+* Cédric Arlen <labo@chambreblanche.qc.ca>
+
 Date: 2016
 
 Technologies: C++, OpenCV, liblo
