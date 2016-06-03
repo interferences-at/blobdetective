@@ -2,6 +2,7 @@
 #include <iostream>
 #include "application.h"
 #include "convert.h"
+#include <sys/time.h>
 
 namespace blobdetective {
 
@@ -165,11 +166,21 @@ int Application::run()
     cv::moveWindow(WINDOW_NAME, 100, 100);
     cv::Mat mirrored_img;
     std::cout << "Press Q to quit" << std::endl;
+    std::cout << "Press S to toggle webcam display" << std::endl;
+    std::cout << "Press F to toggle FPS in terminal" << std::endl;
 
+    cv::Mat frame;
+    showWebcam = true;
+    showFPS = true;
+
+    timespec start;
+    timespec end;
+    clock_gettime(CLOCK_REALTIME, &start);
+    
     while (true)
     {
-        cv::Mat frame;
         (*cap) >> frame; // get a new frame from camera
+
         if (frame.empty())
         {
             std::cerr << "Error: Cannot capture frame." << std::endl;
@@ -178,16 +189,13 @@ int Application::run()
         }
         // First of all, resize the image if needed.
         // FIXME: we might need to check if it is needed
-        cv::resize(frame, frame, cv::Size(frame_width, frame_height));
+        //cv::resize(frame, frame, cv::Size(frame_width, frame_height));
+
         // Convert it to grayscale
         cv::cvtColor(frame, edges, CV_BGR2GRAY);
-        cv::flip(edges, mirrored_img, 1);
-
-        // Blur
-        // cv::GaussianBlur(edges, edges, cv::Size(7, 7), 1.5, 1.5);
 
         // Invert colors
-        cv::Mat inv_src = cv::Scalar::all(255) - mirrored_img;
+        cv::Mat inv_src = cv::Scalar::all(255) - edges;
 
         // Detect blobs.
         std::vector<cv::KeyPoint> keypoints;
@@ -197,30 +205,59 @@ int Application::run()
         // Draw detected blobs as red circles.
         // DrawMatchesFlags::DRAW_RICH_KEYPOINTS flag ensures the size of the
         // circle corresponds to the size of blob
-        cv::Mat im_with_keypoints;
-        cv::drawKeypoints(mirrored_img, keypoints, im_with_keypoints,
-                cv::Scalar(0, 0, 255),
-                cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+        for (int i = 0; i < keypoints.size(); ++ i)
+        {
+            keypoints[i].pt.x = (frame_width-1) - keypoints[i].pt.x;
+        }
 
         // Send OSC
         send_blob_coordinates(keypoints);
 
         // Show blobs
-        cv::imshow(WINDOW_NAME, im_with_keypoints);
+        if (showWebcam)
+        {
+            cv::flip(edges, mirrored_img, 1);
+            cv::Mat im_with_keypoints;
+            cv::drawKeypoints(mirrored_img, keypoints, 
+                im_with_keypoints, 
+                cv::Scalar(0, 0, 255), 
+                cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+            cv::imshow(WINDOW_NAME, im_with_keypoints);
+        }
+        
+        clock_gettime(CLOCK_REALTIME, &end);        
+        if (showFPS)
+        {
+            double deltaTime = (end.tv_sec - start.tv_sec) * 1000;
+            deltaTime += (end.tv_nsec - start.tv_nsec) / 1000000;
+            std::cout << 1000 / deltaTime << " FPS; Num. keypoints: " <<
+                keypoints.size() << std::endl;
+        }
+        start = end;
 
         // if you don't call waitKey, HighGui cannot process windows events
         // like redraw, resizing, input event etc. So just call it, even
         // with a 1ms delay
-        char k;
-        if (k = cv::waitKey(1))
+        char key;
+        if (key = cv::waitKey(1))
         {
-            if (k == 'q') // press 'q' to quit
+            if (key == 'q') // press 'q' to quit
             {
                 break;
             }
+            else if (key == 's') 
+            {
+                showWebcam = !showWebcam;
+            }
+            else if (key == 'f')
+            {
+                showFPS = !showFPS;
+            }
         }
         // TODO: also stop if the window has been destroyed
-    }
+    } // end of while loop
+
     if (cap != NULL)
     {
         delete cap;
@@ -339,3 +376,4 @@ Configuration* Application::get_configuration()
 }
 
 } // end of namespace
+

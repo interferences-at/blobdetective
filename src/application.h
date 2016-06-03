@@ -20,6 +20,9 @@ class Application
         OscInterface *osc_interface;
         int frame_width;
         int frame_height;
+        bool showWebcam;
+        bool showFPS;
+
         void send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints);
         int get_int_option(const char* name);
         float get_float_option(const char* name);
@@ -33,3 +36,4 @@ class Application
 } // end of namespace
 
 #endif // __APPLICATION_H__
+
