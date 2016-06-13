@@ -61,35 +61,34 @@ int main(int argc, char** argv)
     configuration.add_option_string("osc_send_host", "127.0.0.1");
     configuration.add_option_int("identifier", 0);
     configuration.add_option_boolean("verbose", false);
+
+	// Cam params
     configuration.add_option_string("video_device_id", "0");
     configuration.add_option_int("video_fps", 60);
-    configuration.add_option_int("video_width", 640);
-    configuration.add_option_int("video_height", 480);
+    configuration.add_option_int("video_width", 320);
+    configuration.add_option_int("video_height", 240);
 
-    // SimpleBlobDetector params:
-    configuration.add_option_int("thresholdStep", 10);
-    configuration.add_option_float("minThreshold", 0.0);
-    //configuration.add_option_int("maxCentersDist", 10);
-    configuration.add_option_float("maxThreshold", 50.0);
-    configuration.add_option_float("minDistBetweenBlobs", 10.0);
-    configuration.add_option_float("minCircularity", 0.2);
-    configuration.add_option_boolean("filterByArea", true);
+    // Detector params:
+
+	configuration.add_option_int("trackLightBlob", 1);
+    configuration.add_option_int("threshold", 250);
+
+    configuration.add_option_int("filterByArea", 1);
     configuration.add_option_int("minArea", 1500);
     configuration.add_option_int("maxArea", 10000);
-    configuration.add_option_boolean("filterByCircularity", false);
-    // configuration.add_option_int("defaultKeypointSize", 1);
-    // configuration.add_option_boolean("computeRadius", true);
-    configuration.add_option_boolean("filterByColor", true);
-    // Use blobColor = 0 to extract dark blobs
-    // and blobColor = 255 to extract light blobs.
-    configuration.add_option_int("blobColor", 0);
-    configuration.add_option_int("minRepeatability", 2);
-    //configuration.add_option_boolean("isGrayscaleCentroid", false);
-    //configuration.add_option_int("centroidROIMargin", 2);
-    configuration.add_option_boolean("filterByInertia", true);
-    configuration.add_option_float("minInertiaRatio", 0.1);
-    configuration.add_option_boolean("filterByConvexity", false);
-    configuration.add_option_float("minConvexity", 0.95);
+
+    configuration.add_option_int("filterByCircularity", 1);
+	configuration.add_option_int("minCircularity", 20);
+	configuration.add_option_int("maxCircularity", 100);
+
+    configuration.add_option_int("filterByInertia", 1);
+    configuration.add_option_int("minInertiaRatio", 10);
+	configuration.add_option_int("maxInertiaRatio", 100);
+
+    configuration.add_option_int("filterByConvexity", 1);
+    configuration.add_option_int("minConvexity", 80);
+	configuration.add_option_int("maxConvexity", 100);
+
 
     if (command_line_option_exists(argv, argv + argc, "-h") ||
         command_line_option_exists(argv, argv + argc, "--help"))

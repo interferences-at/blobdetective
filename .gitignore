@@ -30,3 +30,7 @@ ltmain.sh
 nohup.out
 src/blobdetective
 prototypes/threads/out
+/.vs/blobdetective/v14
+*.sln
+*.vcxproj
+*.filters

@@ -3,6 +3,8 @@
 
 #include "configuration.h"
 #include "oscinterface.h"
+#include "detector.h"
+#include "camera.h"
 #include <opencv2/opencv.hpp>
 #include <vector>
 
@@ -15,22 +17,27 @@ class Application
         ~Application();
         int run();
         Configuration* get_configuration();
+		Detector* getDetector() { return detector; }
+		Detector::Params& getDetectorParams() { return params; }
+		Camera* getCamera() { return camera; }
+		
+
     private:
         Configuration _configuration;
         OscInterface *osc_interface;
-        int frame_width;
-        int frame_height;
-        bool showWebcam;
-        bool showFPS;
+		//cv::VideoCapture* videoCapture;
+		Detector* detector;
+		Detector::Params params;
+		Camera* camera;
+		static const char* windowName;
 
         void send_blob_coordinates(const std::vector<cv::KeyPoint> &keypoints);
         int get_int_option(const char* name);
         float get_float_option(const char* name);
         std::string get_string_option(const char* name);
         bool get_boolean_option(const char* name);
-        cv::SimpleBlobDetector::Params detector_params_from_options();
-        float convert_x_to_final_range(float value);
-        float convert_y_to_final_range(float value);
+        void detector_params_from_options();
+
 };
 
 } // end of namespace
