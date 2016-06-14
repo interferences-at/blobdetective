@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ~/src/blobdetective/src/blobdetective \
     -v \
     -o video_device_id 1 \

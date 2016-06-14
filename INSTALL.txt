@@ -7,7 +7,8 @@ sudo apt-get install build-essential libopencv-dev liblo-dev
 cd ./src/
 make
 
-Setting the camera settings
+
+Camera settings
 ---------------------------
 You can see the available controls you can adjust with:
 
@@ -16,3 +17,17 @@ and you can adjust what you want using something like:
 
 v4l2-ctl --set-ctrl exposure=96
 v4l2-ctl --set-ctrl gain=30
+
+You can also install qv4l2 for GUI controls
+
+
+Launch at startup
+----------------------------
+You can launch the blobdetective at startup. 
+Launch Startup Applications Preferences and add one of the script of the Script folder.
+You can customise the option by editing the script (see README.txt for option list).
+Make your script executable:
+
+ chmod u+x path/to/script.sh 
+
+Reboot.

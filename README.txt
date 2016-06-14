@@ -15,7 +15,7 @@ Usage and options
 -----------------
 Colors are inverted, so 0 means white, not black, and 255 means black.
 
-The print the help message::
+The print help message::
 
     $ ./blobdetective -h
     Usage: blobdetective [options]
@@ -25,29 +25,31 @@ The print the help message::
      -d [value] Set the video device identifier. /dev/video0
      -o [name] [value] Sets an option value
 
-To list the options::
+List of the options::
 
-    $ ./blobdetective -l
-    -o blobColor 0
-    -o filterByArea true
-    -o filterByCircularity false
-    -o filterByColor true
-    -o filterByConvexity false
-    -o filterByInertia true
+    $ ./blobdetective -l   
     -o identifier "default"
-    -o maxArea 10000
-    -o maxThreshold 50
-    -o minArea 1500
-    -o minCircularity 0.2
-    -o minConvexity 0.95
-    -o minDistBetweenBlobs 10
-    -o minInertiaRatio 0.1
-    -o minRepeatability 2
-    -o minThreshold 0
-    -o osc_send_host "127.0.0.1"
+	-o osc_send_host "127.0.0.1"
     -o osc_send_port 31340
-    -o thresholdStep 10
-    -o verbose false
+    -o verbose (true - false)
     -o video_device_id "0"
     -o video_height 480
     -o video_width 640
+	-o trackLightBlob (0 - 1)
+	-o threshold (0 - 255)
+    -o filterByArea (0 - 1)
+	-o minArea (0 - 20000)
+	-o maxArea (0 - 20000)
+    -o filterByCircularity (0 - 1)
+	-o minCircularity (0 - 100)
+	-o maxCircularity (0 - 100)
+    -o filterByConvexity (0 - 1)
+	-o minConvexity (0 - 100)
+	-o maxConvexity (0 - 100)
+    -o filterByInertia (0 - 1)
+	-o minInertiaRatio (0 - 100)
+	-o maxInertiaRatio (0 - 100)
+
+
+
+    
